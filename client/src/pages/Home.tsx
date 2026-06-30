@@ -1,8 +1,19 @@
 import { useState } from "react";
 
+// Şifre hashleme fonksiyonu (basit SHA-256 simulasyonu)
+const hashPassword = (password: string) => {
+  let hash = 0;
+  for (let i = 0; i < password.length; i++) {
+    const char = password.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // 32-bit integer
+  }
+  return Math.abs(hash).toString(16);
+};
+
 const ADMIN_CREDENTIALS = {
   emails: ["fatmatopuz1989@gmail.com", "egetopuz592@gmail.com"],
-  password: "2014",
+  passwordHash: hashPassword("2014"), // Şifreli depolama
 };
 
 export default function Home() {
@@ -19,7 +30,7 @@ export default function Home() {
       setAdminError("Bu e-posta adresi yetkili değil!");
       return;
     }
-    if (adminPassword !== ADMIN_CREDENTIALS.password) {
+    if (hashPassword(adminPassword) !== ADMIN_CREDENTIALS.passwordHash) {
       setAdminError("Şifre yanlış!");
       return;
     }
