@@ -52,6 +52,8 @@ export default function Home() {
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#0a0a0f", color: "#fff", minHeight: "100vh" }}>
+      {/* Google AdSense Script */}
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-7550544028900670" crossOrigin="anonymous"></script>
       {/* Google Fonts */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
