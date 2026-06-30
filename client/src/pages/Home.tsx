@@ -212,7 +212,7 @@ export default function Home() {
             <img src="/egekeditv-logo.png" alt="egekeditv footer logo" style={{ width: 30, height: 30, borderRadius: 6 }} />
             <span>egekeditv</span>
           </div>
-          <p style={{ fontSize: "0.85rem", color: "#6a6a8a" }}>© 2024 egekeditv. Tüm hakları saklıdır.</p>
+          <p style={{ fontSize: "0.85rem", color: "#6a6a8a" }}>© 2026 egekeditv. Tüm hakları saklıdır.</p>
         </div>
       </footer>
 
