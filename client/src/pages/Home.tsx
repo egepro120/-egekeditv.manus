@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Şifre hashleme fonksiyonu (basit SHA-256 simulasyonu)
 const hashPassword = (password: string) => {
@@ -23,6 +23,18 @@ export default function Home() {
   const [adminPassword, setAdminPassword] = useState("");
   const [adminError, setAdminError] = useState("");
   const [mobileMenu, setMobileMenu] = useState(false);
+
+  // Admin paneli kısayolu: Ctrl+Shift+A
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === "A") {
+        e.preventDefault();
+        setShowAdmin(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, []);
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +65,7 @@ export default function Home() {
       }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 70 }}>
           <a href="#anasayfa" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <img src="/manus-storage/egekeditv-logo_b95e124b.png" alt="egekeditv logo" style={{ width: 40, height: 40, borderRadius: 8 }} />
+            <img src="/manus-storage/egekeditv-logo_5fd29f27.png" alt="egekeditv logo" style={{ width: 40, height: 40, borderRadius: 8 }} />
             <span style={{ fontFamily: "'Orbitron', sans-serif", fontWeight: 700, fontSize: "1.2rem", background: "linear-gradient(135deg, #39ff14, #00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>egekeditv</span>
           </a>
           
@@ -72,7 +84,7 @@ export default function Home() {
       {/* Hero Section */}
       <section id="anasayfa" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <img src="/manus-storage/egekeditv-hero_8d4330a4.png" alt="egekeditv YouTube kanalı hero görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} />
+          <img src="/manus-storage/egekeditv-hero_67572e59.png" alt="egekeditv YouTube kanalı hero görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,10,15,0.7) 0%, rgba(10,10,15,0.4) 50%, rgba(10,10,15,0.9) 100%)" }} />
         </div>
         <div style={{ position: "relative", zIndex: 1, padding: "120px 20px 80px" }}>
@@ -104,7 +116,7 @@ export default function Home() {
       {/* Oyunlarım Section */}
       <section id="oyunlarim" style={{ position: "relative", padding: "100px 0", background: "#1a1a2e" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden" }}>
-          <img src="/manus-storage/egekeditv-games-bg_b89db6ee.png" alt="Oyunlar bölümü arka plan görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.3 }} />
+          <img src="/manus-storage/egekeditv-games-bg_5dcb9874.png" alt="Oyunlar bölümü arka plan görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.3 }} />
         </div>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", position: "relative", zIndex: 1 }}>
           <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 700, textAlign: "center", marginBottom: 12 }}>Oyunlarım</h2>
@@ -115,7 +127,7 @@ export default function Home() {
             <div style={{ background: "#12121f", borderRadius: 16, overflow: "hidden", border: "1px solid #2a2a4a", position: "relative" }}>
               <div style={{ position: "absolute", top: 16, right: 16, padding: "4px 12px", background: "#39ff14", color: "#0a0a0f", fontSize: "0.75rem", fontWeight: 700, borderRadius: 20, zIndex: 2 }}>Yeni!</div>
               <div style={{ width: "100%", height: 280, overflow: "hidden" }}>
-                <img src="/manus-storage/futbol-bilgim_edd7c0d8.jpg" alt="Futbol Bilgim - Futbol bilgisi quiz oyunu" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/manus-storage/futbol-bilgim_47d09122.jpg" alt="Futbol Bilgim - Futbol bilgisi quiz oyunu" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <div style={{ padding: 24 }}>
                 <h3 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: "1.2rem", marginBottom: 8 }}>Futbol Bilgim</h3>
@@ -197,7 +209,7 @@ export default function Home() {
       <footer style={{ padding: "30px 0", background: "#0a0a0f", borderTop: "1px solid #2a2a4a" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "'Orbitron', sans-serif", fontWeight: 700 }}>
-            <img src="/manus-storage/egekeditv-logo_b95e124b.png" alt="egekeditv footer logo" style={{ width: 30, height: 30, borderRadius: 6 }} />
+            <img src="/manus-storage/egekeditv-logo_5fd29f27.png" alt="egekeditv footer logo" style={{ width: 30, height: 30, borderRadius: 6 }} />
             <span>egekeditv</span>
           </div>
           <p style={{ fontSize: "0.85rem", color: "#6a6a8a" }}>© 2024 egekeditv. Tüm hakları saklıdır.</p>
