@@ -23,6 +23,9 @@ export default function Home() {
   const [adminPassword, setAdminPassword] = useState("");
   const [adminError, setAdminError] = useState("");
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [maintenanceEndTime, setMaintenanceEndTime] = useState<number | null>(null);
+  const [maintenanceTimeLeft, setMaintenanceTimeLeft] = useState(0);
 
   // Admin paneli kısayolu: Ctrl+Shift+A
   useEffect(() => {
@@ -35,6 +38,37 @@ export default function Home() {
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, []);
+
+  // Bakım modu zamanlayıcısı
+  useEffect(() => {
+    if (!maintenanceMode || !maintenanceEndTime) return;
+    
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const timeLeft = Math.max(0, maintenanceEndTime - now);
+      setMaintenanceTimeLeft(timeLeft);
+      
+      if (timeLeft === 0) {
+        setMaintenanceMode(false);
+        setMaintenanceEndTime(null);
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [maintenanceMode, maintenanceEndTime]);
+
+  const formatTimeLeft = (ms: number) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const startMaintenance = () => {
+    const endTime = Date.now() + 60 * 60 * 1000; // 1 saat
+    setMaintenanceEndTime(endTime);
+    setMaintenanceMode(true);
+  };
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +83,27 @@ export default function Home() {
     setAdminLoggedIn(true);
     setAdminError("");
   };
+
+  // Bakım modu aktifse overlay göster
+  if (maintenanceMode) {
+    return (
+      <div style={{ fontFamily: "'Inter', sans-serif", background: "#0a0a0f", color: "#fff", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center", padding: "40px 20px" }}>
+          <div style={{ fontSize: "5rem", marginBottom: 24 }}>🔨</div>
+          <h1 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: "2.5rem", fontWeight: 900, marginBottom: 16, background: "linear-gradient(135deg, #00d4ff, #0099ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Sizin İçin Bakımdayız</h1>
+          <p style={{ fontSize: "1.1rem", color: "#b0b0b0", marginBottom: 32 }}>Site şu anda bakım altında. Lütfen daha sonra tekrar ziyaret edin.</p>
+          <div style={{ display: "inline-block", padding: "20px 40px", background: "rgba(0, 212, 255, 0.1)", border: "2px solid #00d4ff", borderRadius: 16, marginBottom: 32 }}>
+            <p style={{ fontSize: "0.9rem", color: "#00d4ff", marginBottom: 8 }}>Tahmini Süre:</p>
+            <p style={{ fontFamily: "'Orbitron', sans-serif", fontSize: "2rem", fontWeight: 700, color: "#00d4ff" }}>{formatTimeLeft(maintenanceTimeLeft)}</p>
+          </div>
+          <p style={{ fontSize: "0.9rem", color: "#6a6a8a" }}>Yeni özellikler ve iyileştirmeler için çalışıyoruz!</p>
+          
+          {/* Admin erişim butonu */}
+          <button onClick={() => setShowAdmin(true)} style={{ marginTop: 32, padding: "10px 20px", background: "rgba(57,255,20,0.1)", border: "1px solid rgba(57,255,20,0.3)", borderRadius: 8, color: "#39ff14", fontSize: "0.85rem", cursor: "pointer" }}>Admin Paneli</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#0a0a0f", color: "#fff", minHeight: "100vh" }}>
@@ -67,7 +122,7 @@ export default function Home() {
       }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 70 }}>
           <a href="#anasayfa" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <img src="/egekeditv-logo.png" alt="egekeditv logo" style={{ width: 40, height: 40, borderRadius: 8 }} />
+            <img src="/manus-storage/egekeditv-logo_8be03397.png" alt="egekeditv logo" style={{ width: 40, height: 40, borderRadius: 8 }} />
             <span style={{ fontFamily: "'Orbitron', sans-serif", fontWeight: 700, fontSize: "1.2rem", background: "linear-gradient(135deg, #39ff14, #00d4ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>egekeditv</span>
           </a>
           
@@ -86,7 +141,7 @@ export default function Home() {
       {/* Hero Section */}
       <section id="anasayfa" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <img src="/egekeditv-hero.png" alt="egekeditv YouTube kanalı hero görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} />
+          <img src="/manus-storage/egekeditv-hero_de0aab4d.png" alt="egekeditv YouTube kanalı hero görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,10,15,0.7) 0%, rgba(10,10,15,0.4) 50%, rgba(10,10,15,0.9) 100%)" }} />
         </div>
         <div style={{ position: "relative", zIndex: 1, padding: "120px 20px 80px" }}>
@@ -96,7 +151,7 @@ export default function Home() {
           <p style={{ fontSize: "1rem", color: "#b0b0b0", maxWidth: 500, margin: "0 auto 32px" }}>Roblox, oyun editleri ve daha fazlası. Eğlenceye hazır mısın?</p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 48 }}>
             <a href="https://www.youtube.com/@pkxdegekeditv" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 12, fontWeight: 600, fontSize: "0.95rem", textDecoration: "none", background: "#39ff14", color: "#0a0a0f", boxShadow: "0 0 20px rgba(57,255,20,0.3)" }}>▶ Kanala Git</a>
-            <a href="#oyunlarim" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 12, fontWeight: 600, fontSize: "0.95rem", textDecoration: "none", background: "transparent", color: "#fff", border: "1px solid #2a2a4a" }}>Oyunlarımı Keşfet</a>
+            <a href="/games" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 12, fontWeight: 600, fontSize: "0.95rem", textDecoration: "none", background: "transparent", color: "#fff", border: "1px solid #2a2a4a" }}>🎮 Minik Oyunlar</a>
           </div>
           <div style={{ display: "flex", gap: 40, justifyContent: "center", flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
@@ -118,7 +173,7 @@ export default function Home() {
       {/* Oyunlarım Section */}
       <section id="oyunlarim" style={{ position: "relative", padding: "100px 0", background: "#1a1a2e" }}>
         <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden" }}>
-          <img src="/egekeditv-games-bg.png" alt="Oyunlar bölümü arka plan görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.3 }} />
+          <img src="/manus-storage/egekeditv-games-bg_92907d95.png" alt="Oyunlar bölümü arka plan görseli" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.3 }} />
         </div>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", position: "relative", zIndex: 1 }}>
           <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 700, textAlign: "center", marginBottom: 12 }}>Oyunlarım</h2>
@@ -203,6 +258,12 @@ export default function Home() {
               <h3 style={{ fontSize: "1.1rem", marginBottom: 4 }}>E-posta</h3>
               <p style={{ fontSize: "0.85rem", color: "#b0b0b0" }}>iletisim2014egekeditv@gmail.com</p>
             </a>
+
+            <a href="/egbot" target="_blank" rel="noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "40px 24px", background: "#12121f", borderRadius: 16, border: "1px solid #2a2a4a", textDecoration: "none", color: "#fff" }}>
+              <div style={{ width: 60, height: 60, borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, background: "rgba(0,212,255,0.15)", fontSize: "1.5rem" }}>🤖</div>
+              <h3 style={{ fontSize: "1.1rem", marginBottom: 4 }}>egbot</h3>
+              <p style={{ fontSize: "0.85rem", color: "#b0b0b0" }}>AI Asistanım</p>
+            </a>
           </div>
         </div>
       </section>
@@ -211,7 +272,7 @@ export default function Home() {
       <footer style={{ padding: "30px 0", background: "#0a0a0f", borderTop: "1px solid #2a2a4a" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "'Orbitron', sans-serif", fontWeight: 700 }}>
-            <img src="/egekeditv-logo.png" alt="egekeditv footer logo" style={{ width: 30, height: 30, borderRadius: 6 }} />
+            <img src="/manus-storage/egekeditv-logo_8be03397.png" alt="egekeditv footer logo" style={{ width: 30, height: 30, borderRadius: 6 }} />
             <span>egekeditv</span>
           </div>
           <p style={{ fontSize: "0.85rem", color: "#6a6a8a" }}>© 2026 egekeditv. Tüm hakları saklıdır.</p>
@@ -251,6 +312,7 @@ export default function Home() {
                 <div style={{ marginBottom: 24, paddingBottom: 24, borderBottom: "1px solid #2a2a4a" }}>
                   <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>📊 Site Yönetimi</h3>
                   <p style={{ fontSize: "0.9rem", color: "#b0b0b0" }}>Hoş geldin! Buradan siteni yönetebilirsin.</p>
+                  <button onClick={startMaintenance} style={{ marginTop: 12, padding: "10px 16px", background: "rgba(0, 212, 255, 0.15)", border: "1px solid rgba(0, 212, 255, 0.3)", borderRadius: 8, color: "#00d4ff", fontSize: "0.9rem", cursor: "pointer", fontWeight: 600 }}>🔨 Bakım Modunu Aç (1 Saat)</button>
                 </div>
                 <div style={{ marginBottom: 24, paddingBottom: 24, borderBottom: "1px solid #2a2a4a" }}>
                   <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>🎮 Oyunlar</h3>
